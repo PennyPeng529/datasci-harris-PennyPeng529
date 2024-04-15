@@ -52,13 +52,16 @@ while True:
 # Question 1.4: Write a list comprehension that starts with any list of strings and returns a new
 # list that contains each string in all lower-case letters, unless the modified string begins with
 # the letter "a" or "b", in which case it should drop it from the result.
-
+my_list=["Anna", "annie", "Penny", "Blair", "Cherry"]
+new_list=[s.lower()for s in my_list if not s. lower().startswith(('a','b'))]
+print(new_list)
 
 # Question 1.5: Beginning with the two lists below, write a single dictionary comprehension that
 # turns them into the following dictionary: {'IL':'Illinois', 'IN':'Indiana', 'MI':'Michigan', 'WI':'Wisconsin'}
 short_names = ['IL', 'IN', 'MI', 'WI']
 long_names  = ['Illinois', 'Indiana', 'Michigan', 'Wisconsin']
-
+dict= {short_names[i]:long_names[i] for i in range(len(short_names))}
+print(dict)
 
 #############
 # Part 2: Functions and classes (must be answered using functions\classes)
@@ -70,8 +73,13 @@ long_names  = ['Illinois', 'Indiana', 'Michigan', 'Wisconsin']
 # following list, with the end result being another list holding the strings 
 # your function generates (e.g. ["big", "big", "small"]).
 
-start_list = [(10, 0), (100, 6), (0, 0), (-15, -100), (5, 4)]
 
+def sum_classfication(a,b):
+    result = a + b
+    return "big" if result > 10 else "just right" if result ==10 else "small"
+start_list = [(10, 0), (100, 6), (0, 0), (-15, -100), (5, 4)]
+result_list = [sum_classfication(a,b) for a, b in start_list]
+print(result_list)
 
 
 # Question 2.2: The following code is fully-functional, but uses a global
@@ -85,6 +93,13 @@ def my_func():
     return a + b
 x = my_func()
 
+#revised
+def my_func(a):
+    b = 40
+    return a + b
+x = my_func(10)
+#Function 'my_func' now takes one argument 'a', so it doesn't need global variable.
+#The function becomes more flexible since it can accept any value of 'a' without a global variable. This makes the code easier to understand.
 
 # Question 2.3: Write a function that can generate a random password from
 # upper-case and lower-case letters, numbers, and special characters 
@@ -98,8 +113,22 @@ x = my_func()
 # libraries below in your solution:
 #import random
 #from numpy import random
-  
-  
+import random 
+
+def generate_password(length, special_chars = True, numbers= True):
+    if length < 8 or length > 16:
+        print("Warning: password length must be between 8 and 16 characters.")
+        return
+    chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    if special_chars:
+        chars += "!@#$%^&*"
+    if numbers:
+        chars += "0123456789"
+    password = ''.join(random.choice(chars) for _ in range(length))
+    return password
+password = generate_password(13)
+print(password)
+
 # Question 2.4: Create a class named MovieDatabase that takes one argument
 # when an instance is created which stores the name of the person creating
 # the database (in this case, you) as an attribute. Then give it two methods:
@@ -119,3 +148,31 @@ x = my_func()
 #
 # Finally, create one instance of your new class, and add four movies to
 # it. Call your what_to_watch method once at the end.
+import random
+
+class MovieDatabase:
+    def __init__(self,creator_name):
+        self.creator_name = creator_name
+        self.movies = []
+        
+    def add_movie(self, movie_name, genre, rating):
+        if rating < 0 or rating > 5:
+            print("Rating must be between 0 and 5")
+        self.movies.append({'name': movie_name, 'genre':genre, 'rating':rating})
+        
+    def what_to_watch(self):
+        if self.movies:
+            movie=random.choice(self.movies)
+            print(f"Tonight, courtesy of {self.creator_name}, you should watch:'{movie['name']}'!"
+                  f"It's a {movie['genre']} rated {movie['rating']}/5.")                                                                     
+        if not self.movies:
+            print("No movies in the database yet.")
+            return
+
+my_movie_database = MovieDatabase("Your Name")
+my_movie_database.add_movie("Forres Gump", "Drama", 4.7)   
+my_movie_database.add_movie("Lala Land", "Romance", 4.8)
+my_movie_database.add_movie("Inception", "Science Fiction", 4.5)         
+my_movie_database.add_movie("The Shawshank Redemption", "Drama", 5)  
+
+my_movie_database.what_to_watch()
